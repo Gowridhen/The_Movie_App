@@ -1,23 +1,23 @@
-const API_KEY = 'YOUR_API_KEY'; // 🟢 replace with your TMDb API key
-const API_URL = `https://api.themoviedb.org/3/movie/popular?api_key=${API_KEY}&language=en-US&page=1`;
-const SEARCH_API = `https://api.themoviedb.org/3/search/movie?api_key=${API_KEY}&query=`;
+const movies = [
+    {
+        title: "Inception",
+        poster_path: "/qmDpIHrmpJINaRKAfWQfftjCdyi.jpg",
+        vote_average: 8.8,
+        overview: "A thief who steals corporate secrets through dream-sharing technology is given the inverse task of planting an idea."
+    },
+    {
+        title: "Interstellar",
+        poster_path: "/rAiYTfKGqDCRIIqo664sY9XZIvQ.jpg",
+        vote_average: 8.6,
+        overview: "A team of explorers travel through a wormhole in space in an attempt to ensure humanity's survival."
+    }
+];
 
-const main = document.getElementById('main');
-const form = document.getElementById('form');
-const search = document.getElementById('search');
+showMovies(movies);
 
-getMovies(API_URL);
-
-// Fetch movies from API
-async function getMovies(url) {
-    const res = await fetch(url);
-    const data = await res.json();
-    showMovies(data.results);
-}
-
-// Display movies on page
 function showMovies(movies) {
-    main.innerHTML = ''; // Clear old movies
+    const main = document.getElementById('main');
+    main.innerHTML = '';
     movies.forEach(movie => {
         const { title, poster_path, vote_average, overview } = movie;
         const movieEl = document.createElement('div');
@@ -26,7 +26,7 @@ function showMovies(movies) {
             <img src="https://image.tmdb.org/t/p/w500${poster_path}" alt="${title}">
             <div class="movie-info">
                 <h3>${title}</h3>
-                <span class="${getClassByRate(vote_average)}">${vote_average.toFixed(1)}</span>
+                <span class="${getClassByRate(vote_average)}">${vote_average}</span>
             </div>
             <div class="overview">
                 <h3>Overview</h3>
@@ -37,25 +37,9 @@ function showMovies(movies) {
     });
 }
 
-// Return color based on rating
 function getClassByRate(vote) {
-    if (vote >= 8) {
-        return 'green';
-    } else if (vote >= 5) {
-        return 'orange';
-    } else {
-        return 'red';
-    }
+    if (vote >= 8) return 'green';
+    else if (vote >= 5) return 'orange';
+    else return 'red';
 }
 
-// Handle search form submit
-form.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const searchTerm = search.value;
-    if (searchTerm && searchTerm !== '') {
-        getMovies(SEARCH_API + searchTerm);
-        search.value = '';
-    } else {
-        window.location.reload();
-    }
-});
