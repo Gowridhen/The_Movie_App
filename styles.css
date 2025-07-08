@@ -9,12 +9,21 @@ body {
     color: white;
     font-family: Arial, sans-serif;
     padding: 20px;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
 }
 
 header {
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    align-items: center;
     margin-bottom: 30px;
+}
+
+header h1 {
+    margin-bottom: 10px;
+    font-size: 24px;
 }
 
 .search {
@@ -30,6 +39,7 @@ header {
     flex-wrap: wrap;
     justify-content: center;
     gap: 20px;
+    flex: 1;
 }
 
 .movie {
@@ -38,11 +48,12 @@ header {
     overflow: hidden;
     width: 200px;
     box-shadow: 0 4px 8px rgba(0,0,0,0.3);
-    transition: transform 0.3s;
+    transition: transform 0.3s, box-shadow 0.3s;
 }
 
 .movie:hover {
     transform: scale(1.05);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.5);
 }
 
 .movie img {
@@ -60,6 +71,11 @@ header {
 
 .movie-info h3 {
     font-size: 16px;
+}
+
+.movie-info small {
+    font-size: 12px;
+    color: #ccc;
 }
 
 .movie-info span {
@@ -92,3 +108,10 @@ header {
     display: block;
 }
 
+footer {
+    text-align: center;
+    padding: 10px;
+    font-size: 14px;
+    color: #888;
+    margin-top: 20px;
+}
