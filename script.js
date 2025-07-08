@@ -1,76 +1,54 @@
+const API_KEY = 'YOUR_API_KEY_HERE';
+const API_URL = `https://api.themoviedb.org/3/discover/movie?sort_by=popularity.desc&api_key=${API_KEY}`;
+const SEARCH_API = `https://api.themoviedb.org/3/search/movie?api_key=${API_KEY}&query=`;
+const IMG_PATH = 'https://image.tmdb.org/t/p/w500';
+
 const main = document.getElementById('main');
 const form = document.getElementById('form');
 const search = document.getElementById('search');
 
-// Dummy data (you can replace this with API data later)
-const movies = [
-    {
-        title: "Inception",
-        rating: 8.8,
-        overview: "A thief who steals corporate secrets through dream-sharing technology is given the inverse task of planting an idea.",
-        image: "https://image.tmdb.org/t/p/w500/qmDpIHrmpJINaRKAfWQfftjCdyi.jpg"
-    },
-    {
-        title: "Interstellar",
-        rating: 8.6,
-        overview: "A team of explorers travel through a wormhole in space in an attempt to ensure humanity's survival.",
-        image: "https://image.tmdb.org/t/p/w500/rAiYTfKGqDCRIIqo664sY9XZIvQ.jpg"
-    },
-    {
-        title: "The Dark Knight",
-        rating: 9.0,
-        overview: "Batman faces the Joker, a criminal mastermind who plunges Gotham into anarchy.",
-        image: "https://image.tmdb.org/t/p/w500/qJ2tW6WMUDux911r6m7haRef0WH.jpg"
-    },
-    {
-        title: "The Matrix",
-        rating: 8.7,
-        overview: "A computer hacker learns about the true nature of his reality and his role in the war against its controllers.",
-        image: "https://image.tmdb.org/t/p/w500/aOIuZAjPaDHWmPs4nOvG8G8CwXR.jpg"
-    }
-];
+// Fetch and show popular movies initially
+getMovies(API_URL);
 
-function getClassByRate(vote) {
-    if (vote >= 8) {
-        return 'green';
-    } else if (vote >= 5) {
-        return 'orange';
-    } else {
-        return 'red';
-    }
+async function getMovies(url) {
+  const res = await fetch(url);
+  const data = await res.json();
+  showMovies(data.results);
 }
 
-function showMovies(movieList) {
-    main.innerHTML = '';
-    movieList.forEach(movie => {
-        const movieEl = document.createElement('div');
-        movieEl.classList.add('movie');
+function showMovies(movies) {
+  main.innerHTML = '';
 
-        movieEl.innerHTML = `
-            <img src="${movie.image}" alt="${movie.title}">
-            <div class="movie-info">
-                <h3>${movie.title}</h3>
-                <span class="${getClassByRate(movie.rating)}">${movie.rating}</span>
-            </div>
-            <div class="overview">
-                <h3>Overview</h3>
-                ${movie.overview}
-            </div>
-        `;
-        main.appendChild(movieEl);
-    });
+  movies.forEach(movie => {
+    const { title, poster_path, vote_average, overview } = movie;
+
+    const movieEl = document.createElement('div');
+    movieEl.classList.add('movie');
+
+    movieEl.innerHTML = `
+      <img src="${poster_path ? IMG_PATH + poster_path : 'https://via.placeholder.com/200x300'}" alt="${title}">
+      <div class="movie-info">
+        <h3>${title}</h3>
+        <span>${vote_average}</span>
+      </div>
+      <div class="overview">
+        ${overview}
+      </div>
+    `;
+    main.appendChild(movieEl);
+  });
 }
 
-// Initial load
-showMovies(movies);
+// Search form
+form.addEventListener('submit', e => {
+  e.preventDefault();
 
-// Optional: Add basic search functionality
-form.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const term = search.value.toLowerCase();
-    const filtered = movies.filter(movie =>
-        movie.title.toLowerCase().includes(term)
-    );
-    showMovies(filtered);
+  const searchTerm = search.value;
+  if (searchTerm && searchTerm !== '') {
+    getMovies(SEARCH_API + searchTerm);
+    search.value = '';
+  } else {
+    window.location.reload();
+  }
 });
 
