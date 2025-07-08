@@ -84,10 +84,11 @@ header {
     padding: 10px;
     font-size: 14px;
     line-height: 1.4;
-    display: none;
     background-color: #1c1c1c;
+    display: none;
 }
 
 .movie:hover .overview {
     display: block;
 }
+
